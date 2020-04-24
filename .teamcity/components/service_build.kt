@@ -24,7 +24,7 @@ fun buildConfigurationForService(azureEnv : String, serviceName: String, paralle
 
             script {
                 name = "Run Tests"
-                scriptContent = "go test -v ./azurerm/internal/services/$serviceName -timeout=%TIMEOUT% -run=%TEST_PREFIX% -json"
+                scriptContent = "go test -v ./azurerm/internal/services/$serviceName/... -timeout=%TIMEOUT% -run=%TEST_PREFIX% -json"
             }
         }
 
