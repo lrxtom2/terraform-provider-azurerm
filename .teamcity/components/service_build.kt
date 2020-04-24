@@ -1,15 +1,25 @@
 import jetbrains.buildServer.configs.kotlin.v2019_2.BuildType
 import jetbrains.buildServer.configs.kotlin.v2019_2.buildFeatures.golang
 import jetbrains.buildServer.configs.kotlin.v2019_2.buildSteps.script
-import jetbrains.buildServer.configs.kotlin.v2019_2.triggers.ScheduleTrigger
 import jetbrains.buildServer.configs.kotlin.v2019_2.triggers.schedule
 
-fun buildConfigurationForService(azureEnv : String, serviceName: String, parallelism : Int): BuildType {
+class serviceDetails(displayName : String, parallelism: Int, startHour: Int) {
+    var displayName = displayName
+    var parallelism = parallelism
+    var startHour = startHour
+}
+
+fun buildConfigurationForService(azureEnv : String, packageName: String,service: serviceDetails?): BuildType {
     return BuildType {
         // TC needs a consistent ID for dynamically generated packages
         // luckily Golang packages are valid, so we're good to reuse that
-        id("AZURE_SERVICE_%s_%s".format(azureEnv.toUpperCase(), serviceName.toUpperCase()))
-        name = "Service - %s".format(serviceName)
+        id("AZURE_SERVICE_%s_%s".format(azureEnv.toUpperCase(), packageName.toUpperCase()))
+
+        if (service != null) {
+            name = "Service - %s".format(service.displayName)
+        } else {
+            name = "Service - %s".format(packageName)
+        }
 
         vcs {
             root(providerRepository)
@@ -22,9 +32,10 @@ fun buildConfigurationForService(azureEnv : String, serviceName: String, paralle
                 scriptContent = "goenv install -s \$(goenv local) && goenv rehash"
             }
 
+            var servicePath = "./azurerm/internal/services/%s/...".format(packageName)
             script {
                 name = "Run Tests"
-                scriptContent = "go test -v ./azurerm/internal/services/$serviceName/... -timeout=%TIMEOUT% -run=%TEST_PREFIX% -json"
+                scriptContent = "go test -v $servicePath -timeout=%TIMEOUT% -run=%TEST_PREFIX% -json"
             }
         }
 
@@ -39,7 +50,11 @@ fun buildConfigurationForService(azureEnv : String, serviceName: String, paralle
         }
 
         params {
-            text("PARALLELISM", "%d".format(parallelism))
+            if (service != null) {
+                text("PARALLELISM", "%d".format(service.parallelism))
+            } else {
+                text("PARALLELISM", "30")
+            }
             text("TEST_PREFIX", "TestAcc")
             text("TIMEOUT", "12h")
             text("env.TF_ACC", "1")
@@ -52,7 +67,13 @@ fun buildConfigurationForService(azureEnv : String, serviceName: String, paralle
                 type = "schedulingTrigger"
                 branchFilter = "+:refs/heads/master"
                 schedulingPolicy = daily {
-                    hour = 1 // TODO: does this want to be staggered?
+
+                    if (service != null) {
+                        hour = service.startHour
+                    } else {
+                        hour = 1
+                    }
+
                     timezone = "SERVER"
                 }
             }

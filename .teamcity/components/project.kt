@@ -6,13 +6,13 @@ object AzureRM : Project({
 
     var environment = "public" // TODO: configurable
     var customParallelism = mapOf(
-        "containers" to 5,
-        "compute" to 7
+        "containers" to serviceDetails("Containers", 5, 5),
+        "compute" to serviceDetails("Compute", 5, 4)
     )
     File("services.txt").forEachLine { l ->
         var serviceName = l
-        var paralellism = customParallelism.getOrDefault(serviceName, 30)
-        var build = buildConfigurationForService(environment, serviceName, paralellism)
+        var service = customParallelism.get(serviceName)
+        var build = buildConfigurationForService(environment, serviceName, service)
         buildType(build)
     }
 })
