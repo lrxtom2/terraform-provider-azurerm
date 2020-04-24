@@ -17,13 +17,13 @@ fun buildConfigurationForService(azureEnv : String, serviceName: String, paralle
 
         steps {
             script {
-                name = "1. Configure Go Version"
+                name = "Configure Go Version"
                 scriptContent = "goenv install -s \$(goenv local) && goenv rehash"
             }
 
             script {
-                name = "2. Run Tests"
-                scriptContent = "go test -v ./azurerm/internal/services/%s -timeout=%TIMEOUT% -run=%TEST_PREFIX% -json"
+                name = "Run Tests"
+                scriptContent = "go test -v ./azurerm/internal/services/%s -timeout=%TIMEOUT% -run=%TEST_PREFIX% -json".format(serviceName)
             }
         }
 
@@ -45,7 +45,7 @@ fun buildConfigurationForService(azureEnv : String, serviceName: String, paralle
                 type = "schedulingTrigger"
                 branchFilter = "+:refs/heads/master"
                 schedulingPolicy = daily {
-                    hour = 1
+                    hour = 1 // TODO: does this want to be staggered?
                     timezone = "SERVER"
                 }
             }
