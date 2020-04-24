@@ -1,4 +1,5 @@
 import jetbrains.buildServer.configs.kotlin.v2019_2.BuildType
+import jetbrains.buildServer.configs.kotlin.v2019_2.buildFeatures.golang
 import jetbrains.buildServer.configs.kotlin.v2019_2.buildSteps.script
 import jetbrains.buildServer.configs.kotlin.v2019_2.triggers.ScheduleTrigger
 import jetbrains.buildServer.configs.kotlin.v2019_2.triggers.schedule
@@ -29,6 +30,12 @@ fun buildConfigurationForService(azureEnv : String, serviceName: String, paralle
 
         failureConditions {
             errorMessage = true
+        }
+
+        features {
+            golang {
+                testFormat = "json"
+            }
         }
 
         params {
