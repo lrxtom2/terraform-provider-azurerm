@@ -9,7 +9,7 @@ fun buildConfigurationForService(azureEnv : String, serviceName: String, paralle
         // luckily Golang packages are valid, so we're good to reuse that
         id("AZURE_SERVICE_%s_%s".format(azureEnv.toUpperCase(), serviceName.toUpperCase()))
         name = "Service - %s".format(serviceName)
-
+        
         vcs {
             root(providerRepository)
             cleanCheckout = true
@@ -23,7 +23,7 @@ fun buildConfigurationForService(azureEnv : String, serviceName: String, paralle
 
             script {
                 name = "Run Tests"
-                scriptContent = "go test -v ./azurerm/internal/services/%s -timeout=%TIMEOUT% -run=%TEST_PREFIX% -json".format(serviceName)
+                scriptContent = "go test -v ./azurerm/internal/services/$serviceName -timeout=%TIMEOUT% -run=%TEST_PREFIX% -json"
             }
         }
 

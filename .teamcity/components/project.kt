@@ -8,7 +8,7 @@ object AzureRM : Project({
     var customParallelism = mapOf(
         "containers" to 5,
         "compute" to 7
-)
+    )
     File("services.txt").forEachLine { l ->
         var serviceName = l
         var paralellism = customParallelism.getOrDefault(serviceName, 30)
