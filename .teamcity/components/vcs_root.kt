@@ -5,8 +5,7 @@ object providerRepository : GitVcsRoot({
     url = "https://github.com/terraform-providers/terraform-provider-azurerm.git"
     agentCleanPolicy = AgentCleanPolicy.ALWAYS
     agentCleanFilesPolicy = AgentCleanFilesPolicy.ALL_UNTRACKED
-    branchSpec = "+:refs/pull/*/merge" +
-            "+:refs/heads/*"
+    branchSpec = "+:refs/heads/* +:refs/pull/*/merge"
     branch = "refs/heads/master"
     authMethod = anonymous()
 })
