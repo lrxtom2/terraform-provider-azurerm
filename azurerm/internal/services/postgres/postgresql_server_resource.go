@@ -701,7 +701,7 @@ func resourceArmPostgreSQLServerRead(d *schema.ResourceData, meta interface{}) e
 		}
 
 		if !utils.ResponseWasNotFound(secResp.Response) {
-			block := flattenSecurityAlertPolicy(secResp.SecurityAlertPolicyProperties, d.Get("threat_detection_policy.0.storage_account_access_key").(string))
+			block := flattenSecurityAlertPolicy(secResp.SecurityAlertsPolicyProperties, d.Get("threat_detection_policy.0.storage_account_access_key").(string))
 			if err := d.Set("threat_detection_policy", block); err != nil {
 				return fmt.Errorf("setting `threat_detection_policy`: %+v", err)
 			}
@@ -841,7 +841,7 @@ func expandSecurityAlertPolicy(i interface{}) *postgresql.ServerSecurityAlertPol
 		state = postgresql.ServerSecurityAlertPolicyStateDisabled
 	}
 
-	props := &postgresql.SecurityAlertPolicyProperties{
+	props := &postgresql.SecurityAlertsPolicyProperties{
 		State: state,
 	}
 
@@ -870,11 +870,11 @@ func expandSecurityAlertPolicy(i interface{}) *postgresql.ServerSecurityAlertPol
 	}
 
 	return &postgresql.ServerSecurityAlertPolicy{
-		SecurityAlertPolicyProperties: props,
+		SecurityAlertsPolicyProperties: props,
 	}
 }
 
-func flattenSecurityAlertPolicy(props *postgresql.SecurityAlertPolicyProperties, accessKey string) interface{} {
+func flattenSecurityAlertPolicy(props *postgresql.SecurityAlertsPolicyProperties, accessKey string) interface{} {
 	if props == nil {
 		return nil
 	}

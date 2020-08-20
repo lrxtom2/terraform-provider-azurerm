@@ -716,7 +716,7 @@ func resourceArmMySqlServerRead(d *schema.ResourceData, meta interface{}) error 
 		}
 
 		if !utils.ResponseWasNotFound(secResp.Response) {
-			block := flattenSecurityAlertPolicy(secResp.SecurityAlertPolicyProperties, d.Get("threat_detection_policy.0.storage_account_access_key").(string))
+			block := flattenSecurityAlertPolicy(secResp.SecurityAlertsPolicyProperties, d.Get("threat_detection_policy.0.storage_account_access_key").(string))
 			if err := d.Set("threat_detection_policy", block); err != nil {
 				return fmt.Errorf("setting `threat_detection_policy`: %+v", err)
 			}
@@ -855,7 +855,7 @@ func expandSecurityAlertPolicy(i interface{}) *mysql.ServerSecurityAlertPolicy {
 		state = mysql.ServerSecurityAlertPolicyStateDisabled
 	}
 
-	props := &mysql.SecurityAlertPolicyProperties{
+	props := &mysql.SecurityAlertsPolicyProperties{
 		State: state,
 	}
 
@@ -884,11 +884,11 @@ func expandSecurityAlertPolicy(i interface{}) *mysql.ServerSecurityAlertPolicy {
 	}
 
 	return &mysql.ServerSecurityAlertPolicy{
-		SecurityAlertPolicyProperties: props,
+		SecurityAlertsPolicyProperties: props,
 	}
 }
 
-func flattenSecurityAlertPolicy(props *mysql.SecurityAlertPolicyProperties, accessKey string) interface{} {
+func flattenSecurityAlertPolicy(props *mysql.SecurityAlertsPolicyProperties, accessKey string) interface{} {
 	if props == nil {
 		return nil
 	}
