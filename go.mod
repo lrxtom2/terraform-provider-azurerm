@@ -32,6 +32,4 @@ replace github.com/Azure/go-autorest/autorest => github.com/tombuildsstuff/go-au
 
 replace github.com/Azure/go-autorest/autorest/azure/auth => github.com/tombuildsstuff/go-autorest/autorest/azure/auth v0.4.3-0.20200416184303-d4e299a3c04a
 
-replace github.com/Azure/azure-sdk-for-go => github.com/ArcturusZhang/azure-sdk-for-go v45.1.3+incompatible
-
 go 1.13
