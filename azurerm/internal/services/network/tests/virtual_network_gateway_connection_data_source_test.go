@@ -73,7 +73,7 @@ func TestAccAzureRMDataSourceVirtualNetworkGatewayConnection_ipsecpolicy(t *test
 					resource.TestCheckResourceAttr(data.ResourceName, "shared_key", sharedKey),
 					resource.TestCheckResourceAttr(data.ResourceName, "type", string(network.IPsec)),
 					resource.TestCheckResourceAttr(data.ResourceName, "routing_weight", "20"),
-					resource.TestCheckResourceAttr(data.ResourceName, "ipsec_policy.0.dh_group", string(network.DHGroup14)),
+					resource.TestCheckResourceAttr(data.ResourceName, "ipsec_policy.0.dh_group", string(network.DhGroupDHGroup14)),
 					resource.TestCheckResourceAttr(data.ResourceName, "ipsec_policy.0.ike_encryption", string(network.AES256)),
 					resource.TestCheckResourceAttr(data.ResourceName, "ipsec_policy.0.ike_integrity", string(network.IkeIntegritySHA256)),
 					resource.TestCheckResourceAttr(data.ResourceName, "ipsec_policy.0.ipsec_encryption", string(network.IpsecEncryptionAES256)),
